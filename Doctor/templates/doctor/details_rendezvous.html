@@ -1,0 +1,26 @@
+{% extends 'doctor/base.html' %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<h3 class="mb-3">Détails des rendez-vous</h3>
+<table class="table table-bordered table-striped">
+  <thead>
+    <tr>
+      <th>Patient</th>
+      <th>Date</th>
+      <th>Heure</th>
+      <th>Motif</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for rdv in rdvs %}
+    <tr>
+      <td>{{ rdv.patient.nom }} {{ rdv.patient.prenoms }}</td>
+      <td>{{ rdv.date }}</td>
+      <td>{{ rdv.heure }}</td>
+      <td>{{ rdv.motif }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}
