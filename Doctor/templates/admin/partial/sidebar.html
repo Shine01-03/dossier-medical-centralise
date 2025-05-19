@@ -1,0 +1,128 @@
+ <aside class="app-sidebar custom-blue-sidebar shadow; color: white;" data-bs-theme="dark">
+        <!--begin::Sidebar Brand-->
+        <div class="sidebar-brand">
+          <!--begin::Brand Link-->
+          <a href="../templates/admin/index.html" class="brand-link">
+            <!--begin::Brand Image-->
+            <img
+              src="../../static/img/AdminLTELogo.png"
+              alt="AdminLTE Logo"
+              class="brand-image opacity-75 shadow"
+            />
+            <!--end::Brand Image-->
+            <!--begin::Brand Text-->
+            <span class="brand-text fw-light">Doctor votre Application</span>
+            <!--end::Brand Text-->
+          </a>
+          <!--end::Brand Link-->
+        </div>
+        <!--end::Sidebar Brand-->
+        <!--begin::Sidebar Wrapper-->
+        <div class="sidebar-wrapper">
+          <nav class="mt-2">
+            <!--begin::Sidebar Menu-->
+            <ul
+              class="nav sidebar-menu flex-column"
+              data-lte-toggle="treeview"
+              role="menu"
+              data-accordion="false">
+            
+            {% if is_medecin %}    
+              <li class="nav-item menu-open">
+                <a href="#" class="nav-link active">
+                  <i class="nav-icon bi bi-speedometer"></i>
+                  <p>
+                    Bienvenue cher Docteur
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="#" class="nav-link ">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Tableau de bord</p>
+                    </a>
+                  </li>
+                   
+                  <li class="nav-item">
+                    <a href="./index3.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Gestion médecin</p>
+                    </a>
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="./widgets/small-box.html" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Small Box</p>
+                    </a>
+                  </ul>
+                  
+                  </li>
+            {% else %}      
+
+              <li class="nav-item menu-open">
+                <a href="#" class="nav-link active">
+                  <i class="nav-icon bi bi-speedometer"></i>
+                  <p>
+                    Bienvenue cher Admin
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'index' %}" class="nav-link ">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Tableau de bord</p>
+                    </a>
+                  </li>
+                   
+                  <li class="nav-item menu-open">
+                <a href="#" class="nav-link ">
+                  <i class="nav-icon bi bi-speedometer"></i>
+                  <p>
+                    Gestion des médecins
+                    <i class="nav-arrow bi bi-chevron-right"></i>
+                  </p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'liste_medecins' %}" class="nav-link ">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Liste des médecins</p>
+                    </a>
+                  </li>
+                   
+                  <li class="nav-item">
+                      <a href="{% url 'ajouter_medecin' %}" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>Ajouter médecin</p>
+                    </a>
+                  </li>
+                </ul>
+                
+                  
+                  </li>
+                </ul>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'logout' %}" class="nav-link text-danger fw-bold">
+                      <i class="nav-icon bi bi-box-arrow-right me-2"></i>
+                      <p>Deconnexion</p>
+                    </a>
+                  </ul>
+                  
+                  </li>
+            {% endif %}      
+
+              
+                </ul>
+              </li>
+              </li>
+            </ul>
+            <!--end::Sidebar Menu-->
+          </nav>
+        </div>
+        <!--end::Sidebar Wrapper-->
+      </aside>

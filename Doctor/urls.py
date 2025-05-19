@@ -15,8 +15,16 @@ urlpatterns = [
     path('patients/ajouter/', views.ajouter_patient, name='ajouter_patient'),
 
     # url de connexion et de deconnexion
-    path('connexion/', views.login_view, name='login'),
-    path('deconnexion/', views.deconnexion, name='deconnexion'),
+    path('login/', views.login, name='login'),
+    path('deconnexion/', views.deconnexion, name='logout'),
+
+    #url pour ajouter un médecin
+     path('gestion-medecins/', views.gestion_medecins, name='gestion_medecins'),
+    path('ajouter_medecin/', views.ajouter_medecin, name='ajouter_medecin'),
+    path('modifier/<int:medecin_id>/', views.modifier_medecin, name='modifier_medecin'),
+    path('supprimer/<int:medecin_id>/', views.supprimer_medecin, name='supprimer_medecin'),
+    path('liste_medecins/', views.liste_medecins, name='liste_medecins'),
+
 ]
 
 

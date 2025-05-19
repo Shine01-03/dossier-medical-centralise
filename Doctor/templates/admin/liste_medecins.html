@@ -1,0 +1,91 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+{% block extrahead %}
+  <!-- CSS Bootstrap -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Liste des Médecins</h2>
+  <a class="btn btn-outline-primary"  href="{% url 'ajouter_medecin' %}">Nouveau Etudiant</a>
+
+  <!-- Barre de recherche -->
+  <div class="mb-3">
+    <input type="text" id="searchInput" class="form-control" placeholder="🔎 Rechercher un médecin...">
+  </div>
+
+  <!-- Tableau -->
+  <div class="table-responsive">
+    <table class="table table-bordered table-hover align-middle text-center" id="medecinTable">
+      <thead class="table-dark">
+        <tr>
+          <th>Avatar</th>
+          <th><a href="?sort=nom" class="text-white text-decoration-none">Nom</a></th>
+          <th><a href="?sort=prenom" class="text-white text-decoration-none">Prénom</a></th>
+          <th>Nom d'utilisateur</th>
+          <th>Sexe</th>
+          <th>Spécialité</th>
+          <th>Email</th>
+          <th><a href="?sort=date" class="text-white text-decoration-none">Ajouté le</a></th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for medecin in medecins %}
+        <tr>
+          <td>
+          {% if medecin.photo_profil %}
+            <img src="{{ medecin.photo_profil.url }}" alt="avatar" width="50" height="50" class="rounded-circle">
+          {% else %}
+            {% if medecin.sexe == "Homme" %}
+
+              <img src="{% static 'img/avatars/avatar8.jpeg' %}" alt="avatar" width="50" height="50" class="rounded-circle">
+
+            {% elif medecin.sexe == "Femme" %}
+              <img src="{% static 'img/avatars/avatar12.jpeg' %}" alt="avatar" width="50" height="50" class="rounded-circle"> 
+            {% else %} 
+
+              <img src="{% static 'img/avatars/avatarE.jpg' %}" alt="avatar" width="50" height="50" class="rounded-circle"> 
+
+            {% endif %}  
+
+
+          {% endif %}
+
+          </td>
+          <td>{{ medecin.user.first_name }}</td>
+          <td>{{ medecin.user.last_name }}</td>
+          <td>{{ medecin.user.username }}</td>
+          <td>{{ medecin.sexe }}</td>
+          <td>{{ medecin.specialite }}</td>
+          <td>{{ medecin.user.email }}</td>
+          <td>{{ medecin.user.date_joined|date:"d/m/Y" }}</td>
+          <td>
+            <a href="{% url 'modifier_medecin' medecin.id %}" class="btn btn-sm btn-outline-primary">✏️</a>
+            <a href="{% url 'supprimer_medecin' medecin.id %}" class="btn btn-sm btn-outline-danger"
+               onclick="return confirm('Voulez-vous vraiment supprimer ce médecin ?');">🗑️</a>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- JS Bootstrap + Recherche -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.getElementById('searchInput').addEventListener('keyup', function () {
+  const input = this.value.toLowerCase();
+  const rows = document.querySelectorAll('#medecinTable tbody tr');
+
+  rows.forEach(row => {
+    const visible = row.textContent.toLowerCase().includes(input);
+    row.style.display = visible ? '' : 'none';
+  });
+});
+</script>
+{% endblock %}

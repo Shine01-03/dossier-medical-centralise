@@ -1,12 +1,19 @@
 from django.db import models
 from django.conf import settings
 from django.contrib.auth.models import AbstractUser
+from django.contrib.auth.models import User
+from django.utils import timezone
 
 # Create your models here.
+
+
 
 class Medecin(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)    
     specialite = models.CharField(max_length=100, blank=True, null=True)
+    sexe = models.CharField(max_length=10, choices=[('Homme', 'Homme'), ('Femme', 'Femme')], null= True, blank = True)
+
+    photo_profil = models.ImageField(null= True, blank= True)
     # ajoute d'autres champs si besoin
 
     def __str__(self):

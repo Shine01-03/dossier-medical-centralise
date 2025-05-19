@@ -1,0 +1,13 @@
+<h2>Mon profil</h2>
+
+<p><strong>Nom :</strong> {{ medecin.last_name }}</p>
+<p><strong>Prénom :</strong> {{ medecin.first_name }}</p>
+<p><strong>Email :</strong> {{ medecin.email }}</p>
+<p><strong>Sexe :</strong> {{ medecin.sexe }}</p>
+<p><strong>Spécialité :</strong> {{ medecin.specialite }}</p>
+
+{% if medecin.avatar %}
+    <img src="{{ medecin.avatar.url }}" alt="Avatar du médecin" width="150">
+{% else %}
+    <p>Aucun avatar défini.</p>
+{% endif %}

@@ -1,0 +1,68 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block body %}
+
+
+
+<div class="col-md-12">
+
+  <div class="card card-primary card-outline mb-4">
+    <!--begin::Header-->
+      <div class="card-header">
+        <div class="card-title"><strong>Ajouter un médecin</strong></div>
+      </div>
+        <!--end::Header--> 
+        <!--begin::Form-->
+         <!--begin::Body-->
+          <div class="container mt-5" text-center mt-5>
+          <form method="post" action="{% url 'ajouter_medecin' %}" enctype="multipart/form-data" class="row g-3">
+            {% csrf_token %}
+
+              <div class="col-md-6">
+                <label for="id_username" class="form-label">Nom d'utilisateur</label>
+                  {{ form.username }}
+                  </div>
+
+                  <div class="col-md-6">
+                     <label for="id_password" class="form-label">Mot de passe</label>
+                      {{ form.password }}
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="id_first_name" class="form-label">Prénom(s)</label>
+                          {{ form.prenoms }}
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="id_last_name" class="form-label">Nom</label>
+                          {{ form.nom }}
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="id_email" class="form-label">Email</label>
+                          {{ form.email }}
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="id_specialite" class="form-label">Spécialité</label>
+                          {{ form.specialite }}
+                        </div>
+
+                        <div class="col-md-6">
+                          <label for="id_sexe" class="form-label">Sexe</label>
+                          {{ form.sexe }}
+                        </div>
+
+                       <div class="col-12 text-center mt-3">
+                          <button type="submit" class="btn btn-primary">Ajouter le médecin</button>
+                        </div>
+                      
+                      </form>
+          </div>
+                    <!--end::Body-->
+                
+                  
+                  <!--end::Form-->
+                </div>
+{% endblock %}
