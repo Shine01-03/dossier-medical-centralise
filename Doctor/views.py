@@ -186,3 +186,11 @@ def supprimer_medecin(request, medecin_id):
         medecin.delete()
         return redirect('liste_medecins')
     return render(request, 'admin/supprimer_medecin.html', {'medecin': medecin})
+
+def rechercher_medecin(request):
+    if request.method == 'POST':
+        nom = request.POST.get('nom')
+        prenoms = request.POST.get('prenoms')
+        medecins = Medecin.objects.filter(nom__icontains=nom, prenoms__icontains=prenoms)
+        return render(request, 'admin/liste_medecins.html', {'medecins': medecins})
+    return render(request, 'admin/rechercher_medecin.html')
