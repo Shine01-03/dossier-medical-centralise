@@ -5,12 +5,29 @@
 {% block extrahead %}
   <!-- CSS Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+}
+</style>
+
 {% endblock %}
 
 {% block body %}
 <div class="container mt-5">
   <h2 class="text-center mb-4">Liste des Médecins</h2>
-  <a class="btn btn-outline-primary"  href="{% url 'ajouter_medecin' %}">Nouveau Etudiant</a>
+  <a class="btn btn-outline-primary"  href="{% url 'ajouter_medecin' %}">Nouveau Médecin</a>
 
   <!-- Barre de recherche -->
   <div class="mb-3">
@@ -65,15 +82,43 @@
           <td>{{ medecin.user.date_joined|date:"d/m/Y" }}</td>
           <td>
             <a href="{% url 'modifier_medecin' medecin.id %}" class="btn btn-sm btn-outline-primary">✏️</a>
-            <a href="{% url 'supprimer_medecin' medecin.id %}" class="btn btn-sm btn-outline-danger"
-               onclick="return confirm('Voulez-vous vraiment supprimer ce médecin ?');">🗑️</a>
-          </td>
-        </tr>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalSuppression{{ medecin.id }}">
+                🗑️
+              </button>
+
+              <!-- Modal de confirmation -->
+              <div class="modal fade" id="modalSuppression{{ medecin.id }}" tabindex="-1">
+                <div class="modal-dialog">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title">Confirmer la suppression</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                    </div>
+                    <div class="modal-body">
+                      Voulez-vous vraiment supprimer <strong>{{ medecin.nom }}</strong> ?
+                    </div>
+                    <div class="modal-footer">
+                      <form method="post" action="{% url 'supprimer_medecin' medecin.id %}">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-danger">Supprimer</button>
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                      </form>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </td>
+          </tr>
         {% endfor %}
       </tbody>
     </table>
+
+      
+
   </div>
 </div>
+
+
 
 <!-- JS Bootstrap + Recherche -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
@@ -88,4 +133,22 @@ document.getElementById('searchInput').addEventListener('keyup', function () {
   });
 });
 </script>
+
+<script>
+function openModal(medecinId, nomComplet) {
+    const modal = document.getElementById("confirmModal");
+    const message = document.getElementById("confirmMessage");
+    const form = document.getElementById("deleteForm");
+
+    message.textContent = `Êtes-vous sûr de vouloir supprimer ${nomComplet} ?`;
+    form.action = `/supprimer_medecin/${medecinId}/`; 
+
+    modal.style.display = "flex";
+}
+
+function closeModal() {
+    document.getElementById("confirmModal").style.display = "none";
+}
+</script>
+
 {% endblock %}

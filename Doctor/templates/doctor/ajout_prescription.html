@@ -1,0 +1,113 @@
+{% extends 'doctor/base.html' %}
+{% load static %}
+
+{% block content %}
+<div class="container mt-5" style="max-width: 1000px;">
+  <div class="card shadow-lg">
+    <!-- En-tête -->
+    <div class="card-header text-white text-center" style="background-color: hsl(214, 64%, 35%)">
+      <h4>💊 Ajouter une prescription pour {{ patient.nom }} {{ patient.prenoms }}</h4>
+    </div>
+
+    <div class="card-body">
+
+      <!-- Alertes antécédents critiques -->
+      {% if antecedents_critiques %}
+        <div class="alert alert-danger fw-bold">
+          ⚠️ Ce patient présente des informations critiques :
+          <ul class="mb-0">
+            {% for antecedent in antecedents_critiques %}
+              <li><strong>{{ antecedent.get_type_antecedent_display }} :</strong> {{ antecedent.description }}</li>
+            {% endfor %}
+          </ul>
+        </div>
+      {% endif %}
+
+      <!-- Formulaire prescription -->
+      <form method="post">
+        {% csrf_token %}
+
+        <!-- Remarques -->
+        <div class="mb-3">
+          <label class="form-label">Remarques (facultatif)</label>
+          {{ prescription_form.remarques }}
+        </div>
+
+        <!-- Médicaments dynamiques -->
+        <h5 class="text-primary mt-4">🧾 Médicaments prescrits</h5>
+        <div id="formset-container">
+          {{ medicament_formset.management_form }}
+          {% for form in medicament_formset %}
+            <div class="border rounded p-3 mb-3 shadow-sm formset-form">
+              <div class="mb-2">
+                <label class="form-label">Nom du médicament</label>
+                {{ form.nom_medicament }}
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Posologie</label>
+                {{ form.posologie }}
+              </div>
+              <div class="mb-2">
+                <label class="form-label">Durée du traitement (en jours)</label>
+                {{ form.duree_traitement }}
+              </div>
+              {{ form.DELETE }}
+            </div>
+          {% endfor %}
+        </div>
+
+        <!-- Bouton Ajouter un médicament -->
+        <div class="text-center mt-2">
+          <button type="button" class="btn btn-outline-primary" id="add-form">
+            ➕ Ajouter un médicament
+          </button>
+        </div>
+
+        <!-- Boutons Enregistrer / Annuler -->
+        <div class="text-center mt-4">
+          <button type="submit" class="btn btn-success btn-lg px-4">
+            💾 Enregistrer
+          </button>
+          <a href="{% url 'details_patient' patient.id %}" class="btn btn-outline-secondary btn-lg px-4">
+            ❌ Annuler
+          </a>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Script pour ajouter dynamiquement un médicament -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const addBtn = document.getElementById("add-form");
+  const container = document.getElementById("formset-container");
+  const totalForms = document.getElementById("id_form-TOTAL_FORMS");
+
+  addBtn.addEventListener("click", () => {
+    const formCount = parseInt(totalForms.value);
+    const newForm = container.querySelector(".formset-form").cloneNode(true);
+
+    // Réinitialiser les champs
+    newForm.querySelectorAll("input, textarea").forEach(input => {
+      const name = input.name.replace(/form-(\d+)-/, `form-${formCount}-`);
+      const id = `id_${name}`;
+      input.name = name;
+      input.id = id;
+      input.value = "";
+    });
+
+    // Mettre à jour les labels
+    newForm.querySelectorAll("label").forEach(label => {
+      const forAttr = label.getAttribute("for");
+      if (forAttr) {
+        label.setAttribute("for", forAttr.replace(/form-(\d+)-/, `form-${formCount}-`));
+      }
+    });
+
+    container.appendChild(newForm);
+    totalForms.value = formCount + 1;
+  });
+});
+</script>
+{% endblock %}

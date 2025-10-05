@@ -1,0 +1,136 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <h2 class="text-center mb-4">Liste des Patients</h2>
+  <select id="etatFilter" class="form-select w-auto">
+    <option value="">Tous</option>
+    <option value="A">Assuré(e)</option>
+    <option value="N">Non Assuré(e)</option>
+  </select>
+
+
+  <!-- Barre de recherche -->
+  <div class="d-flex justify-content-end mb-4">
+    <input type="text" id="searchInput" class="form-control w-25" placeholder="🔍 Rechercher par nom ou matricule">
+    <button class="btn btn-secondary" type="button" id="voiceSearchBtn">
+      🎤
+  </button>
+  </div>
+
+  
+
+  <!-- Tableau des patients -->
+  <div class="table-responsive">
+<table id="patientTable" class="table table-hover table-striped align-middle text-center">
+      <thead class="table-dark">
+        <tr>
+          <th>Matricule</th>
+          <th>Nom</th>
+          <th>Prénoms</th>
+          <th>Sexe</th>
+          <th>Téléphone</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for patient in patients %}
+        <tr>
+          <td>{{ patient.matricule }}</td>
+          <td>{{ patient.nom }}</td>
+          <td>{{ patient.prenom }}</td>
+          <td>{{ patient.sexe }}</td>
+          <td>{{ patient.telephone }}</td>
+          <td>
+            <a href="{% url 'details_patient' patient.id %}" class="btn text-white " style="background-color: hsl(214, 64%, 35%)">👁 Voir plus</a>
+           <!--<a href="{% url 'modifier_patient' patient.id %}" class="btn btn-sm btn-secondary">✏️ Modifier</a>
+            <button type="button" class="btn btn-sm btn-outline-danger" data-bs-toggle="modal" data-bs-target="#modalSuppression{{ patient.id }}">
+              🗑️Supprimer
+            </button>
+
+            <div class="modal fade" id="modalSuppression{{ patient.id }}" tabindex="-1">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title">Confirmer la suppression</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                  </div>
+                  <div class="modal-body">
+                    Voulez-vous vraiment supprimer le patient <strong>{{ patient.nom }} {{ patient.prenoms }}</strong> ?
+                  </div>
+                  <div class="modal-footer">
+                    <form method="post" action="{% url 'supprimer_patient' patient.id %}">
+                      {% csrf_token %}
+                      <button type="submit" class="btn btn-danger">Supprimer</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div> -->
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<script>
+  const input = document.getElementById("searchInput");
+  input.addEventListener("keyup", function () {
+    const filter = input.value.toLowerCase();
+    const rows = document.querySelectorAll('#patientTable tbody tr');
+    rows.forEach((row) => {
+      const text = row.textContent.toLowerCase();
+      row.style.display = text.includes(filter) ? "" : "none";
+    });
+  });
+
+  const voiceBtn = document.getElementById('voiceSearchBtn');
+  const searchInput = document.getElementById('searchInput');
+
+  if ('webkitSpeechRecognition' in window) {
+    const recognition = new webkitSpeechRecognition();
+    recognition.lang = 'fr-FR';
+    recognition.continuous = false;
+    recognition.interimResults = false;
+
+    voiceBtn.addEventListener('click', () => {
+      recognition.start();
+    });
+
+    recognition.onresult = function (event) {
+      const result = event.results[0][0].transcript;
+      searchInput.value = result;
+      searchInput.dispatchEvent(new Event('keyup')); 
+    };
+
+    recognition.onerror = function (event) {
+      alert('Erreur lors de la reconnaissance vocale : ' + event.error);
+    };
+  } else {
+    voiceBtn.disabled = true;
+    alert('La reconnaissance vocale n’est pas supportée sur ce navigateur.');
+  }
+
+  document.getElementById('etatFilter').addEventListener('change', function () {
+  const selected = this.value;
+  const rows = document.querySelectorAll('#patientTable tbody tr');
+
+  rows.forEach(row => {
+    const etat = row.querySelector('.etat').textContent.trim();
+    row.style.display = selected === "" || etat === selected ? "" : "none";
+  });
+});
+
+</script>
+
+{% endblock %}

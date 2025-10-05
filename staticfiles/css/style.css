@@ -1,0 +1,12 @@
+.custom-blue-sidebar {
+    background-color: hsl(215, 54%, 70%);
+    color: white;
+  }
+  
+  .custom-blue-sidebar a {
+    color: white;
+  }
+  
+  .titre-docteur {
+  text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.2);
+}

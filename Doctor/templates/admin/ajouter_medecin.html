@@ -3,18 +3,13 @@
 
 {% block body %}
 
-
-
 <div class="col-md-12">
 
   <div class="card card-primary card-outline mb-4">
-    <!--begin::Header-->
       <div class="card-header">
         <div class="card-title"><strong>Ajouter un médecin</strong></div>
       </div>
-        <!--end::Header--> 
-        <!--begin::Form-->
-         <!--begin::Body-->
+      
           <div class="container mt-5" text-center mt-5>
           <form method="post" action="{% url 'ajouter_medecin' %}" enctype="multipart/form-data" class="row g-3">
             {% csrf_token %}
@@ -60,9 +55,5 @@
                       
                       </form>
           </div>
-                    <!--end::Body-->
-                
-                  
-                  <!--end::Form-->
                 </div>
 {% endblock %}

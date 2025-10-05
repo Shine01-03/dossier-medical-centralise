@@ -2,22 +2,17 @@
         <!--begin::Sidebar Brand-->
         <div class="sidebar-brand">
           <!--begin::Brand Link-->
-          <a href="../templates/admin/index.html" class="brand-link">
+          <a href="#" class="brand-link">
             <!--begin::Brand Image-->
             <img
-              src="../../static/img/AdminLTELogo.png"
-              alt="AdminLTE Logo"
-              class="brand-image opacity-75 shadow"
+              src="../../static/img/logo.jpg"
+              alt="MediTech Logo"
+              class="brand-image opacity-100 shadow"
             />
-            <!--end::Brand Image-->
-            <!--begin::Brand Text-->
-            <span class="brand-text fw-light">Doctor votre Application</span>
-            <!--end::Brand Text-->
+           
+            <span class="brand-text fw-light">MediTech</span>
           </a>
-          <!--end::Brand Link-->
         </div>
-        <!--end::Sidebar Brand-->
-        <!--begin::Sidebar Wrapper-->
         <div class="sidebar-wrapper">
           <nav class="mt-2">
             <!--begin::Sidebar Menu-->
@@ -28,38 +23,83 @@
               data-accordion="false">
             
             {% if is_medecin %}    
+            
+            <!-- Mes patients -->
+            <li class="nav-item menu-open">
+              <a href="#" class="nav-link">
+                <i class="nav-icon bi bi-people-fill"></i>
+                <p>🩺 Mes patients <i class="nav-arrow bi bi-chevron-right"></i></p>
+              </a>
+              <ul class="nav nav-treeview">
+                <li class="nav-item">
+                  <a href="{% url 'liste_patients' %}" class="nav-link">
+                    <i class="nav-icon bi bi-circle"></i>
+                    <p>📋 Tous les patients</p>
+                  </a>
+                </li>
+                
+               
+              </ul>
+            </li>
+
+              <!-- Gestion des prescriptions -->
               <li class="nav-item menu-open">
-                <a href="#" class="nav-link active">
-                  <i class="nav-icon bi bi-speedometer"></i>
-                  <p>
-                    Bienvenue cher Docteur
-                    <i class="nav-arrow bi bi-chevron-right"></i>
-                  </p>
+                <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-prescription2"></i>
+                  <p>💊 Prescription médicale <i class="nav-arrow bi bi-chevron-right"></i></p>
                 </a>
                 <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="#" class="nav-link ">
+                    <a href="{% url 'liste_patients' %}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Tableau de bord</p>
+                      <p>👨‍⚕️ Prescrire un traitement</p>
                     </a>
                   </li>
-                   
+                 
+                </ul>
+              </li>
+
+
+              <!-- Rendez-vous -->
+              <li class="nav-item menu-open">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-calendar-event"></i>
+                  <p>📆 Rendez-vous <i class="nav-arrow bi bi-chevron-right"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
                   <li class="nav-item">
-                    <a href="./index3.html" class="nav-link">
+                    <a href="{% url 'details_rendezvous' %}" class="nav-link">
                       <i class="nav-icon bi bi-circle"></i>
-                      <p>Gestion médecin</p>
+                      <p>📅 Voir le planning</p>
+                    </a>
+                  </li>
+                
+                </ul>
+              </li>
+
+              <!-- Mon profil -->
+              <li class="nav-item menu-open">
+                <a href="#" class="nav-link">
+                  <i class="nav-icon bi bi-person-circle"></i>
+                  <p>📁 Mon profil <i class="nav-arrow bi bi-chevron-right"></i></p>
+                </a>
+                <ul class="nav nav-treeview">
+                  <li class="nav-item">
+                    <a href="{% url 'mon_profil' %}" class="nav-link">
+                      <i class="nav-icon bi bi-circle"></i>
+                      <p>⚙️ Paramètres</p>
                     </a>
                   </li>
                 </ul>
-                <ul class="nav nav-treeview">
-                  <li class="nav-item">
-                    <a href="./widgets/small-box.html" class="nav-link">
-                      <i class="nav-icon bi bi-circle"></i>
-                      <p>Small Box</p>
-                    </a>
-                  </ul>
-                  
-                  </li>
+              </li>
+
+              <!-- Déconnexion (isolée) -->
+              <li class="nav-item mt-3">
+                <a href="{% url 'logout' %}" class="nav-link text-danger fw-bold">
+                  <i class="nav-icon bi bi-box-arrow-right me-2"></i>
+                  <p>🔓 Déconnexion</p>
+                </a>
+              </li>
             {% else %}      
 
               <li class="nav-item menu-open">

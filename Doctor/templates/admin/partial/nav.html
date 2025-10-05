@@ -1,3 +1,4 @@
+{% load static %}
 <nav class="app-header navbar navbar-expand bg-body">
         <!--begin::Container-->
         <div class="container-fluid">
@@ -8,7 +9,8 @@
                 <i class="bi bi-list"></i>
               </a>
             </li>
-            <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Accueil</a></li>
+
+            <li class="nav-item d-none d-md-block"><a href="{% url 'index' %}" class="nav-link">Accueil</a></li>
           </ul>
           <!--end::Start Navbar Links-->
           <!--begin::End Navbar Links-->
@@ -32,7 +34,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../static/img/user1-128x128.jpg"
+                        src="../../static/img/avatars/avatar9.jpeg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -58,7 +60,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../static/img/user8-128x128.jpg"
+                        src="../../static/img/avatars/avatar8.jpeg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -84,7 +86,7 @@
                   <div class="d-flex">
                     <div class="flex-shrink-0">
                       <img
-                        src="../../static/img/user3-128x128.jpg"
+                        src="../../static/img/avatars/avatar1.jpeg"
                         alt="User Avatar"
                         class="img-size-50 rounded-circle me-3"
                       />
@@ -136,14 +138,74 @@
                 <a href="#" class="dropdown-item dropdown-footer"> Voir toutes les Notifications </a>
               </div>
             </li>
-            <!--end::Notifications Dropdown Menu-->
-            <!--begin::Fullscreen Toggle-->
             <li class="nav-item">
               <a class="nav-link" href="#" data-lte-toggle="fullscreen">
                 <i data-lte-icon="maximize" class="bi bi-arrows-fullscreen"></i>
                 <i data-lte-icon="minimize" class="bi bi-fullscreen-exit" style="display: none"></i>
               </a>
             </li>
+
+             {% if is_medecin %}   
+            <li class="nav-item dropdown user-menu">
+              <a href="#" class="nav-link dropdown-toggle" data-bs-toggle="dropdown">
+                {% if medecin.photo_profil %}
+                      <img src="{{ medecin.photo_profil.url }}" alt="avatar" width="40" height="40" class="rounded-circle">
+                    {% else %}
+                      {% if medecin.sexe == "Homme" %}
+
+                        <img src="{% static 'img/avatars/avatar8.jpeg' %}" alt="avatar" width="40" height="40" class="rounded-circle">
+
+                      {% elif medecin.sexe == "Femme" %}
+                        <img src="{% static 'img/avatars/avatar12.jpeg' %}" alt="avatar" width="40" height="40" class="rounded-circle"> 
+                      {% else %} 
+
+                        <img src="{% static 'img/avatars/avatarE.jpg' %}" alt="avatar" width="40" height="40" class="rounded-circle"> 
+
+                      {% endif %}  
+
+
+                    {% endif %}
+                
+              </a>
+              <ul class="dropdown-menu dropdown-menu-lg dropdown-menu-end">
+                <li class="user-header text-bg-primary">
+                
+                    {% if medecin.photo_profil %}
+                      <img src="{{ medecin.photo_profil.url }}" alt="avatar" width="50" height="50" class="rounded-circle">
+                    {% else %}
+                      {% if medecin.sexe == "Homme" %}
+
+                        <img src="{% static 'img/avatars/avatar8.jpeg' %}" alt="avatar" width="50" height="50" class="rounded-circle">
+
+                      {% elif medecin.sexe == "Femme" %}
+                        <img src="{% static 'img/avatars/avatar12.jpeg' %}" alt="avatar" width="50" height="50" class="rounded-circle"> 
+                      {% else %} 
+
+                        <img src="{% static 'img/avatars/avatarE.jpg' %}" alt="avatar" width="50" height="50" class="rounded-circle"> 
+
+                      {% endif %}  
+
+
+                    {% endif %}
+                  
+                  <p>
+                    {{ user.get_full_name }} – {{ user.medecin.specialite }}
+                    <small>Inscrit depuis {{ user.date_joined|date:"F Y" }}</small>
+                  </p>
+                </li>
+                
+                
+
+                <li class="user-footer">
+                  <a href="{% url 'mon_profil' %}" class="btn btn-default btn-flat">👤 Mon Profil</a>
+                  <a href="{% url 'logout' %}" class="btn btn-default btn-flat float-end">Déconnexion </a>
+                </li>
+                <!--end::Menu Footer-->
+              </ul>
+            </li>
+            {% endif %}
+            <!--end::Notifications Dropdown Menu-->
+            
               </ul>
             </li>
             <!--end::User Menu Dropdown-->

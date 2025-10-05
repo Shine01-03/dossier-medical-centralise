@@ -1,15 +1,25 @@
-{% extends 'doctor/base.html' %}
-{% block title %}Dashboard{% endblock %}
+{% extends 'admin/base_site.html' %}
+{% load static %}
 
-{% block content %}
-<h3 class="mb-3">Détails des rendez-vous</h3>
-<table class="table table-bordered table-striped">
-  <thead>
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+ <h3 class="mb-3">📅 Détails des rendez-vous</h3>
+
+<table class="table table-bordered table-striped table-hover">
+  <thead class="table-primary">
     <tr>
       <th>Patient</th>
       <th>Date</th>
       <th>Heure</th>
       <th>Motif</th>
+      <th>Statut</th>
+      <th>Actions</th>
     </tr>
   </thead>
   <tbody>
@@ -19,8 +29,33 @@
       <td>{{ rdv.date }}</td>
       <td>{{ rdv.heure }}</td>
       <td>{{ rdv.motif }}</td>
+      <td>
+        <span class="badge 
+          {% if rdv.statut == 'confirme' %}bg-success
+          {% elif rdv.statut == 'annule' %}bg-danger
+          {% elif rdv.statut == 'termine' %}bg-secondary
+          {% else %}bg-warning text-dark{% endif %}">
+          {{ rdv.get_statut_display }}
+        </span>
+      </td>
+      <td>
+        <form method="post" class="d-flex">
+          {% csrf_token %}
+          <input type="hidden" name="rdv_id" value="{{ rdv.id }}">
+          <select name="status" class="form-select form-select-sm me-2" onchange="this.form.submit()">
+            {% for value,label in rdv.STATUTS %}
+              <option value="{{ value }}" {% if rdv.statut == value %}selected{% endif %}>{{ label }}</option>
+            {% endfor %}
+          </select>
+        </form>
+      </td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="6" class="text-center text-muted">Aucun rendez-vous trouvé.</td>
     </tr>
     {% endfor %}
   </tbody>
 </table>
+</div>
 {% endblock %}

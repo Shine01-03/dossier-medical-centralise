@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <style>
+    body { font-family: DejaVu Sans, sans-serif; font-size: 12px; }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .header img {
+      width: 90px;
+      margin-bottom: 10px;
+    }
+    table {
+            width: 100%;
+            border-collapse: collapse;
+            font-family: Arial, sans-serif;
+            font-size: 14px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            padding: 10px;
+            text-align: left;
+            border-bottom: 2px solid #ccc;
+        }
+
+        td {
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+
+        tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        caption {
+            caption-side: top;
+            font-size: 18px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+    .signature {
+      margin-top: 40px;
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <img src="data:image/png;base64,{{ logo_base64 }}" alt="Logo">
+    <h2>Centre Médical Centralisé</h2>
+    <p><strong>Rapport des consultations</strong></p>
+    <p>Période : {{ date_export|date:"F Y" }}</p>
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Nom patient</th>
+        <th>Date</th>
+        <th>Diagnostic</th>
+        <th>Médecin</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for c in consultations %}
+      <tr>
+        <td>{{ c.patient.nom }} {{ c.patient.prenoms }}</td>
+        <td>{{ c.date|date:"d/m/Y" }}</td>
+        <td>{{ c.diagnostic }}</td>
+        <td>{{ c.medecin.user.get_full_name }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4" style="text-align:center;">Aucune consultation trouvée pour cette période.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  <div class="signature">
+    <p>________________________</p>
+    <p><strong>Signature du médecin</strong></p>
+  </div>
+</body>
+</html>

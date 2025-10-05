@@ -1,13 +1,94 @@
-<h2>Mon profil</h2>
+{% extends 'admin/base_site.html' %}
+{% load static %}
+{% load widget_tweaks %}
 
-<p><strong>Nom :</strong> {{ medecin.last_name }}</p>
-<p><strong>Prénom :</strong> {{ medecin.first_name }}</p>
-<p><strong>Email :</strong> {{ medecin.email }}</p>
-<p><strong>Sexe :</strong> {{ medecin.sexe }}</p>
-<p><strong>Spécialité :</strong> {{ medecin.specialite }}</p>
+{% block extrahead %}
 
-{% if medecin.avatar %}
-    <img src="{{ medecin.avatar.url }}" alt="Avatar du médecin" width="150">
-{% else %}
-    <p>Aucun avatar défini.</p>
-{% endif %}
+
+{% endblock %}
+
+{% block body %}
+<div class="container py-5">
+  <h2 class="text-center mb-4">👨‍⚕️ Docteur {{ user.get_full_name }}</h2>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      <div class="card shadow border-0 rounded-4 p-4">
+
+        <!-- Photo de profil -->
+        <div class="text-center mb-4 position-relative profile-container">
+          {% if medecin.photo_profil %}
+            <img src="{{ medecin.photo_profil.url }}" class="rounded-circle border img-fluid profile-image" width="170" height="170" alt="Photo de profil">
+          {% else %}
+            {% if medecin.sexe == "Homme" %}
+              <img src="{% static 'img/avatars/avatar8.jpeg' %}" class="rounded-circle profile-image" width="170" height="170">
+            {% elif medecin.sexe == "Femme" %}
+              <img src="{% static 'img/avatars/avatar12.jpeg' %}" class="rounded-circle profile-image" width="170" height="170">
+            {% else %}
+              <img src="{% static 'img/avatars/avatarE.jpg' %}" class="rounded-circle profile-image" width="170" height="170">
+            {% endif %}
+          {% endif %}
+
+          <div class="profile-overlay d-flex justify-content-center align-items-center">
+            <label for="id_photo_profil" class="btn btn-sm btn-light mx-1">✏️ Modifier</label>
+            <a href="{% url 'supprimer_avatar' %}" class="btn btn-sm btn-danger mx-1">🗑️ Supprimer</a>
+          </div>
+        </div>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+          <div class="row g-3">
+            {% for field in form %}
+              <div class="{% if field.name == 'specialite' or field.name == 'sexe' %}col-md-6{% else %}col-md-6{% endif %}">
+                <label class="form-label">{{ field.label }}</label>
+                {{ field|add_class:"form-control" }}
+                {% if field.errors %}
+                  <div class="text-danger small">{{ field.errors }}</div>
+                {% endif %}
+              </div>
+            {% endfor %}
+            <div class="col-12">
+              <input type="file" id="id_photo_profil" name="photo_profil" class="d-none">
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between mt-4">
+            <button type="submit" class="btn btn-success px-4">💾 Mettre à jour</button>
+            <a href="{% url 'password_change' %}" class="btn btn-outline-danger">🔒 Changer mot de passe</a>
+          </div>
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.profile-container {
+  width: 170px;
+  margin: 0 auto;
+}
+.profile-image {
+  object-fit: cover;
+}
+.profile-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 170px;
+  height: 170px;
+  border-radius: 50%;
+  background: rgba(0,0,0,0.4);
+  color: white;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+.profile-container:hover .profile-overlay {
+  opacity: 1;
+}
+.profile-overlay a,
+.profile-overlay label {
+  cursor: pointer;
+}
+</style>
+{% endblock %}

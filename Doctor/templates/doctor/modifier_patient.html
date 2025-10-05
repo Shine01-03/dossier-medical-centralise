@@ -1,0 +1,172 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block body %}
+
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  {% load static %}
+  <meta charset="UTF-8">
+  <title>Modifier le Patient</title>
+  <link rel="stylesheet" href="{% static 'css/style.css' %}">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    .form-card {
+      background:#fff;
+      border:1px solid #e9ecef;
+      border-radius:12px;
+      box-shadow:0 6px 18px rgba(0,0,0,.06);
+    }
+    .form-section-title{
+      font-weight:700;
+      font-size:1rem;
+      color:#0d6efd;
+      margin-bottom:.75rem;
+    }
+    .req::after{ content:" *"; color:#dc3545; }
+    .row-gap{ row-gap:1rem; }
+
+    /* Uniformiser tous les champs sans dépendre de classes sur les widgets */
+    .form-card input[type="text"],
+    .form-card input[type="email"],
+    .form-card input[type="date"],
+    .form-card input[type="password"],
+    .form-card input[type="tel"],
+    .form-card select,
+    .form-card textarea{
+      width:100%;
+      border:1px solid #dee2e6;
+      border-radius:.6rem;
+      padding:.55rem .85rem;
+      background:#fff;
+    }
+    .form-card input[type="text"],
+    .form-card input[type="email"],
+    .form-card input[type="date"],
+    .form-card input[type="password"],
+    .form-card input[type="tel"],
+    .form-card select{
+      height:44px;               /* même hauteur partout */
+    }
+    .form-card textarea{ min-height:96px; }
+
+    .invalid-feedback{ display:block; } /* toujours visibles sous le champ */
+  </style>
+
+  <div class="container py-4">
+    <div class="col-12 col-lg-10 mx-auto form-card p-4 p-md-5">
+      <h2 class="h4 mb-4 text-center">
+        Modifier le patient : <strong>{{ patient.prenom }} {{ patient.nom }}</strong>
+      </h2>
+
+      <form method="post" novalidate>
+        {% csrf_token %}
+
+        <!-- Identité -->
+        <div class="mb-3">
+          <div class="form-section-title">Identité</div>
+          <div class="row row-gap">
+            <div class="col-md-6">
+              <label class="form-label req">Nom</label>
+              {{ form.nom }}
+              {% if form.nom.errors %}<div class="invalid-feedback">{{ form.nom.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label req">Prénom(s)</label>
+              {{ form.prenom }}
+              {% if form.prenom.errors %}<div class="invalid-feedback">{{ form.prenom.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label req">Date de naissance</label>
+              {{ form.date_naissance }}
+              {% if form.date_naissance.errors %}<div class="invalid-feedback">{{ form.date_naissance.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label req">Sexe</label>
+              {{ form.sexe }}
+              {% if form.sexe.errors %}<div class="invalid-feedback">{{ form.sexe.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Situation matrimoniale</label>
+              {{ form.situation_matrimoniale }}
+              {% if form.situation_matrimoniale.errors %}<div class="invalid-feedback">{{ form.situation_matrimoniale.errors|striptags }}</div>{% endif %}
+          </div>
+        </div>
+
+        <!-- Contact & Authentification -->
+        <div class="mb-3">
+          <div class="form-section-title">Contact & Authentification</div>
+          <div class="row row-gap">
+            <div class="col-md-6">
+              <label class="form-label req">Email</label>
+              {{ form.email }}
+              {% if form.email.errors %}<div class="invalid-feedback">{{ form.email.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Téléphone</label>
+              {{ form.telephone }}
+              {% if form.telephone.errors %}<div class="invalid-feedback">{{ form.telephone.errors|striptags }}</div>{% endif %}
+            </div>
+           
+          </div>
+        </div>
+
+        <!-- Infos médicales complémentaires -->
+        <div class="mb-3">
+          <div class="form-section-title">Infos médicales</div>
+          <div class="row row-gap">
+            <div class="col-md-6">
+              <label class="form-label">Groupe sanguin</label>
+              {{ form.groupe_sanguin }}
+              {% if form.groupe_sanguin.errors %}<div class="invalid-feedback">{{ form.groupe_sanguin.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Profession</label>
+              {{ form.profession }}
+              {% if form.profession.errors %}<div class="invalid-feedback">{{ form.profession.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-12">
+              <label class="form-label">Adresse</label>
+              {{ form.adresse }}
+              {% if form.adresse.errors %}<div class="invalid-feedback">{{ form.adresse.errors|striptags }}</div>{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <!-- Personne à prévenir -->
+        <div class="mb-4">
+          <div class="form-section-title">Personne à prévenir</div>
+          <div class="row row-gap">
+            <div class="col-md-6">
+              <label class="form-label">Nom & Prénom</label>
+              {{ form.personne_a_prevenir }}
+              {% if form.personne_a_prevenir.errors %}<div class="invalid-feedback">{{ form.personne_a_prevenir.errors|striptags }}</div>{% endif %}
+            </div>
+            <div class="col-md-6">
+              <label class="form-label">Téléphone</label>
+              {{ form.tel_personne_prevenir }}
+              {% if form.tel_personne_prevenir.errors %}<div class="invalid-feedback">{{ form.tel_personne_prevenir.errors|striptags }}</div>{% endif %}
+            </div>
+          </div>
+        </div>
+
+        <div class="d-flex gap-2 justify-content-between">
+          <a href="{% url 'liste_patients' %}" class="btn btn-outline-secondary">Annuler</a>
+          <button type="submit" class="btn btn-primary">Enregistrer les modifications</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+</body>
+</html>
+{% endblock %}

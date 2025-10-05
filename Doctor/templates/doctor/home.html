@@ -1,0 +1,125 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <link rel="icon" type="image/png" href="{% static 'img/favicon.png' %}">
+  <title>MediTech</title>
+  <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      min-height: 100vh;
+      background: url("{% static 'img/plan.jpeg' %}") center/cover no-repeat;
+      position: relative;
+    }
+
+    /* Overlay flou sombre pour lisibilité */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: rgba(16, 69, 120, 0.4);
+      backdrop-filter: blur(4px);
+      z-index: 0;
+    }
+
+    .marquee-banner {
+      position: relative;
+      z-index: 2;
+      background-color: rgb(240, 255, 249);
+      color: #043057;
+      padding: 10px 0;
+      font-weight: bold;
+      font-size: 1rem;
+      text-align: center;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    }
+
+    .hero-container {
+      position: relative;
+      z-index: 2;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+      height: calc(100vh - 50px);
+    }
+
+    .hero-card {
+      background: white;
+      padding: 40px 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.2);
+      text-align: center;
+      width: 90%;
+      max-width: 550px;
+      animation: fadeIn 0.8s ease-in-out;
+    }
+
+    .logo {
+      width: 100px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      color: #104578;
+      margin-bottom: 15px;
+    }
+
+    p {
+      font-size: 1rem;
+      color: #444;
+      margin-bottom: 30px;
+    }
+
+    .btn-primary {
+      padding: 12px 30px;
+      font-size: 1.1rem;
+      background-color: #104578;
+      border: none;
+      color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      transition: all 0.3s ease-in-out;
+      font-weight: bold;
+      letter-spacing: 0.5px;
+      text-decoration: none;
+    }
+
+    .btn-primary:hover {
+      background-color: #0b355f;
+      transform: translateY(-2px);
+      box-shadow: 0 6px 14px rgba(0, 0, 0, 0.25);
+      color: white;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Bannière défilante -->
+  <div class="marquee-banner">
+    <marquee behavior="scroll" direction="left" scrollamount="5">
+      Bienvenue sur <strong>MediTech</strong>, votre dossier médical centralisé en toute sécurité.
+    </marquee>
+  </div>
+
+  <!-- Carte au centre -->
+  <div class="hero-container">
+    <div class="hero-card">
+      <img src="{% static 'img/logo.jpg' %}" alt="Logo" class="logo">
+      <h2>🩺 MediTech</h2>
+      <p>Une solution moderne, sécurisée et intelligente pour la gestion des dossiers médicaux.</p>
+      <a href="{% url 'login' %}" class="btn btn-primary" style="text-decoration: none;">🔐 Se connecter</a>
+    </div>
+  </div>
+
+</body>
+</html>

@@ -1,0 +1,59 @@
+{% extends 'doctor/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">
+            <i class="bi bi-journal-medical"></i>
+            Ajouter un antécédent pour {{ patient.nom }} {{ patient.prenoms }}
+          </h4>
+        </div>
+        <div class="card-body px-4 py-4">
+          <form method="post" class="row g-3" autocomplete="off">
+            {% csrf_token %}
+
+            <!-- Type d'antécédent -->
+            <div class="col-12">
+              <label class="form-label fw-bold">Type d'antécédent</label>
+              {{ form.type_antecedent|add_class:"form-select" }}
+            </div>
+
+            <!-- Description -->
+            <div class="col-12">
+              <label class="form-label fw-bold">Description</label>
+              {{ form.description|add_class:"form-control" }}
+            </div>
+
+            <!-- Information critique -->
+            <div class="col-12 form-check mb-4">
+              {{ form.important|add_class:"form-check-input" }}
+              <label class="form-check-label fw-bold" for="{{ form.important.id_for_label }}">
+                ⚠️ Information critique (ex: allergie grave, grossesse…)
+              </label>
+              <span class="text-muted small d-block">
+                Cochez cette case si l'information est vitale à la survie ou à la sécurité du patient.
+              </span>
+            </div>
+
+            <!-- Boutons -->
+            <div class="col-12 d-flex justify-content-center gap-3 mt-4">
+              <button type="submit" class="btn btn-success btn-lg px-4">
+                💾 Ajouter
+              </button>
+              <a href="{% url 'details_patient' patient.id %}" class="btn btn-outline-secondary btn-lg px-4">
+                ❌ Annuler
+              </a>
+            </div>
+
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

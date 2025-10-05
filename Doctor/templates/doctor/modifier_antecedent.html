@@ -1,0 +1,42 @@
+{% extends 'doctor/base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block content %}
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <div class="card shadow-lg border-0">
+        <div class="card-header bg-primary text-white text-center">
+          <h4 class="mb-0">✏️ Modifier l'antécédent de {{ patient.nom }} {{ patient.prenoms }}</h4>
+        </div>
+        <div class="card-body px-4 py-4">
+          <form method="post">
+            {% csrf_token %}
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Type d'antécédent</label>
+              {{ form.type_antecedent|add_class:"form-select" }}
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label fw-bold">Description</label>
+              {{ form.description|add_class:"form-control" }}
+            </div>
+
+            <div class="form-check mb-3">
+              {{ form.important|add_class:"form-check-input" }}
+              <label class="form-check-label">⚠️ Informations critiques</label>
+            </div>
+
+            <div class="d-flex justify-content-center gap-3 mt-4">
+              <button type="submit" class="btn btn-success btn-lg px-4">💾 Enregistrer</button>
+              <a href="{% url 'details_patient' patient.id %}" class="btn btn-outline-secondary btn-lg px-4">❌ Annuler</a>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

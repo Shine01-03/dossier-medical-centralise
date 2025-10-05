@@ -4,68 +4,147 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Connexion</title>
+    <title>Connexion | MediTech</title>
+    
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
     <style>
         body {
-            background: linear-gradient(to right, #007bff, #00c6ff);
+            margin: 0;
+            font-family: 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            background: url("{% static 'img/plan.jpeg' %}") center/cover no-repeat;
+            position: relative;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             font-family: 'Segoe UI', sans-serif;
         }
+        body::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(16, 69, 120, 0.4);
+            backdrop-filter: blur(4px);
+            z-index: 0;
+        }
+        .marquee-banner {
+            position: relative;
+            z-index: 2;
+            background-color: white;
+            color: #043057;
+            padding: 10px 0;
+            font-weight: bold;
+            font-size: 1rem;
+            text-align: center;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+        }
+
         .login-container {
             background-color: #ffffff;
-            padding: 40px;
-            border-radius: 15px;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            padding: 40px 35px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
             width: 100%;
             max-width: 420px;
+            text-align: center;
+            position: relative;
+            z-index: 2;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        .login-logo {
+            width: 80px;
+            margin-bottom: 10px;
         }
         .login-title {
             font-size: 1.8rem;
             font-weight: bold;
-            color: #343a40;
-            margin-bottom: 20px;
-            text-align: center;
+            color: #104578;
+            margin-bottom: 25px;
         }
         .form-label {
             font-weight: 500;
+            color: #333;
+        }
+        .form-control {
+            border-radius: 10px;
+            padding: 12px;
+            border: 1px solid #ddd;
+            transition: all 0.2s ease-in-out;
+        }
+        .form-control:focus {
+            border-color: #007bff;
+            box-shadow: 0 0 8px rgba(0, 123, 255, 0.3);
         }
         .btn-primary {
             width: 100%;
+            padding: 12px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+        .btn-secondary {
+            width: 100%;
+            margin-top: 12px;
+            border-radius: 10px;
         }
         .alert {
             margin-top: 15px;
+            font-size: 0.9rem;
         }
+
     </style>
 </head>
 <body>
     <div class="login-container">
-        <div class="login-title">Connexion à votre compte</div>
+        <img src="{% static 'img/logo.jpg' %}" alt="MediTech Logo" class="login-logo">
+        <div class="login-title">Connexion à MediTech</div>
         
         {% if messages %}
             {% for message in messages %}
-                <div class="alert alert-{{ message.tags }}">{{ message }}</div>
+                <div id="alert-message" class="alert alert-success alert-dismissible fade show" role="alert">
+                    {{ message }}
+                </div>
             {% endfor %}
         {% endif %}
 
         <form method="post">
             {% csrf_token %}
-            <div class="mb-3">
+            <div class="mb-3 text-start">
                 <label for="username" class="form-label">Nom d'utilisateur</label>
                 <input type="text" name="username" id="username" class="form-control" required>
             </div>
-
-            <div class="mb-3">
+            <div class="mb-3 text-start">
                 <label for="password" class="form-label">Mot de passe</label>
                 <input type="password" name="password" id="password" class="form-control" required>
             </div>
-
-            <button type="submit" class="btn btn-primary">Se connecter</button>
+            <button type="submit" class="btn btn-primary">
+                🔐 Se connecter
+            </button>
         </form>
+
+        <a href="{% url 'home' %}" class="btn btn-secondary mt-3">
+            ⬅ Retour à l'accueil
+        </a>
     </div>
+
+    <script>
+        setTimeout(function () {
+            const alert = document.getElementById('alert-message');
+            if (alert) {
+                alert.classList.remove('show'); 
+                setTimeout(() => alert.remove(), 500);
+            }
+        }, 5000);
+    </script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 </body>

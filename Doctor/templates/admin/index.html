@@ -1,6 +1,8 @@
 {% extends 'admin/base.html' %}
 
-  {% block body %}
+{% load static %}
+
+{% block body %}
 
       <main class="app-main">
         <!--begin::App Content Header-->
@@ -13,9 +15,26 @@
               <div class="col-sm-6">
                 <ol class="breadcrumb float-sm-end">
                   <li class="nav-item">
-                    <a href="{% url 'logout' %}" class="nav-link text-danger fw-bold">
-                    <i class="bi bi-box-arrow-right me-2"></i> Déconnexion
-                    </a>
+                    
+                    {% if is_medecin %}
+                     
+                     
+                      <div class="d-flex justify-content-end gap-2">
+
+                          <a href="{% url 'details_rendezvous' %}" class="btn btn-primary">
+                              📅 Voir les rendez-vous
+                          </a>
+                      </div>
+
+                    {% else %}  
+                      
+                      <a href="{% url 'exporter_medecins' %}" class="btn btn-dark float-end me-2">
+                        <i class="bi bi-file-earmark-person-fill"></i> Exporter liste des médecins (PDF)
+                      </a>
+
+                      
+                    {% endif %}
+
                    </li>
                 </ol>
               </div>
@@ -25,72 +44,125 @@
           <!--end::Container-->
         </div>
         <div class="app-content">
-          <!--begin::Container-->
-          <div class="container-fluid">
-            <!-- Info boxes -->
-            <div class="row">
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="bi bi-gear-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">Controlle de Sécurité</span>
-                    <span class="info-box-number">
-                      90
-                      <small>%</small>
-                    </span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="bi bi-hand-thumbs-up-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">Commentaires</span>
-                    <span class="info-box-number">25</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <!-- fix for small devices only -->
-              <!-- <div class="clearfix hidden-md-up"></div> -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="bi bi-cart-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">Déjà téléchargé</span>
-                    <span class="info-box-number">60</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-              <div class="col-12 col-sm-6 col-md-3">
-                <div class="info-box">
-                  <span class="info-box-icon text-bg-primary shadow-sm">
-                    <i class="bi bi-people-fill"></i>
-                  </span>
-                  <div class="info-box-content">
-                    <span class="info-box-text">Nouveaux utilisateurs</span>
-                    <span class="info-box-number">8</span>
-                  </div>
-                  <!-- /.info-box-content -->
-                </div>
-                <!-- /.info-box -->
-              </div>
-              <!-- /.col -->
-            </div>
+         <!--begin::Container-->
+<div class="container-fluid">
+  {% if is_medecin %}
+    <div class="row">
+      <!-- Patients suivis -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box">
+          <span class="info-box-icon bg-primary shadow-sm">
+            <i class="bi bi-people-fill text-white"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">👩‍⚕️ Patients suivis</span>
+            <span class="info-box-number">{{ total_patients }}</span>
+            <small>Total patients suivis</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Rendez-vous du jour -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box">
+          <span class="info-box-icon bg-success shadow-sm">
+            <i class="bi bi-calendar-check-fill text-white"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">📅 Rendez-vous du jour</span>
+            <span class="info-box-number">{{ rdv_du_jour }}</span>
+            <small>Consultations prévues</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Alertes médicales -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box">
+          <span class="info-box-icon bg-danger shadow-sm">
+            <i class="bi bi-exclamation-triangle-fill text-white"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">⚠️ Alertes médicales</span>
+            <span class="info-box-number">{{ alertes }}</span>
+            <small>Valeurs critiques</small>
+          </div>
+        </div>
+      </div>
+
+      <!-- Consultations -->
+      <div class="col-12 col-sm-6 col-md-3">
+        <div class="info-box">
+          <span class="info-box-icon bg-warning shadow-sm">
+            <i class="bi bi-clipboard2-check-fill text-white"></i>
+          </span>
+          <div class="info-box-content">
+            <span class="info-box-text">📊 Consultations</span>
+            <span class="info-box-number">{{ consultations_mois }}</span>
+            <small>Ce mois</small>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Dossiers récents -->
+    <div class="card mt-4">
+      <div class="card-header bg-info text-white">
+        📑 Dossiers récents (5 derniers patients vus)
+      </div>
+      <div class="card-body p-0">
+        <table class="table table-hover m-0">
+          <thead>
+            <tr>
+              <th>Nom</th>
+              <th>Âge</th>
+              <th>Motif</th>
+              <th>Date</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for consultation in dossiers_recents %}
+              <tr>
+                <td>{{ consultation.patient.nom }} {{ consultation.patient.prenoms }}</td>
+                <td>{{ consultation.patient.age }} ans</td>
+                <td>{{ consultation.diagnostic|truncatechars:40 }}</td>
+                <td>{{ consultation.date|date:"d/m/Y" }}</td>
+              </tr>
+            {% empty %}
+              <tr><td colspan="4" class="text-center">Aucune consultation enregistrée.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  {% else %}
+    <!-- Widgets Admin -->
+    <div class="row">
+      <div class="col-md-3">
+        <div class="info-box">
+          <span class="info-box-icon bg-primary"><i class="bi bi-person-vcard"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">👨‍⚕️ Médecins enregistrés</span>
+            <span class="info-box-number">{{ total_medecins }}</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="info-box">
+          <span class="info-box-icon bg-dark"><i class="bi bi-gear-wide-connected"></i></span>
+          <div class="info-box-content">
+            <span class="info-box-text">🛠️ Panneaux système</span>
+            <span class="info-box-number">OK</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+</div>
+<!--end::Container-->
+
             <!-- /.row -->
             <!--begin::Row-->
              {% if is_medecin %} 
@@ -143,7 +215,9 @@
                        
                       </div>
                     </div>
+        {% if is_medecin %} 
 
+         {% else %}
                   <div class="row">
                     <div class="col-md-12">
                       <div class="card mb-4">
@@ -151,141 +225,45 @@
                     <div class="card">
                       <div class="card-header">
                           <h3 class="card-title">Utilisateurs récents</h3>
-                          <!-- outils ici -->
-                          <div class="card-tools">
-                            <span class="badge text-bg-danger"> 8 Nouveaux utilisateurs</span>
-                            <button
-                              type="button"
-                              class="btn btn-tool"
-                              data-lte-toggle="card-collapse"
-                            >
-                              <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                              <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                            </button>
-                            <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                              <i class="bi bi-x-lg"></i>
-                            </button>
-                          </div>
-                        </div>
-                        <div class="card-body">
-                          <!-- contenu des membres ici -->
-                          <div class="row text-center m-1">
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/6.jpeg"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. Alexander Pierce
-                              </a>
-                              <div class="fs-8">Aujourd'hui</div>
-                            </div>
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/7.jpeg"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. Stella DANO
-                              </a>
-                              <div class="fs-8">Hier</div>
-                            </div>
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/H1.jpeg"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. Jane SOWOU
-                              </a>
-                              <div class="fs-8">12 Avril</div>
-                            </div>
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/N3.jpeg"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. Jessica AKAKPO
-                              </a>
-                              <div class="fs-8">12 Avril</div>
-                            </div>
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/9.png"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. Nathalie GENA
-                              </a>
-                              <div class="fs-8">13 Avril</div>
-                            </div>
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/10.jpeg"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. Sarah POULI
-                              </a>
-                              <div class="fs-8">14 Avril</div>
-                            </div>
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/12.jpeg"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. Eléna Bao
-                              </a>
-                              <div class="fs-8">15 Avril</div>
-                            </div>
-                            <div class="col-3 p-2">
-                              <img
-                                class="img-fluid rounded-circle"
-                                src="../static/img/H2.jpeg"
-                                alt="User Image"
-                              />
-                              <a
-                                class="btn fw-bold fs-7 text-secondary text-truncate w-100 p-0"
-                                href="#"
-                              >
-                                Dr. AWAL Mohamed
-                              </a>
-                              <div class="fs-8">15 Avril</div>
-                            </div>
-                          </div>
-                        </div>
+                          <table class="table">
+                            <thead>
+                              <tr>
+                                <th>Photo</th>
+                                <th>Nom</th>
+                                <th>Prénom</th>
+                                <th>Spécialité</th>
+                                <th>Date d’ajout</th>
+                              </tr>
+                            </thead>
+                            <tbody>
+                              {% for medecin in medecins_recents %}
+                                <tr>
+                                  <td>
+                                    {% if medecin.photo_profil %}
+                                      <img src="{{ medecin.photo_profil.url }}" alt="avatar" width="40" height="40" class="rounded-circle">
+                                    {% else %}
+                                      {% if medecin.sexe == "Homme" %}
+                                        <img src="{% static 'img/avatars/avatar8.jpeg' %}" alt="avatar" width="40" height="40" class="rounded-circle">
+                                      {% elif medecin.sexe == "Femme" %}
+                                        <img src="{% static 'img/avatars/avatar12.jpeg' %}" alt="avatar" width="40" height="40" class="rounded-circle">
+                                      {% else %}
+                                        <img src="{% static 'img/avatars/avatarE.jpg' %}" alt="avatar" width="40" height="40" class="rounded-circle">
+                                      {% endif %}
+                                    {% endif %}
+                                  </td>
+                                  <td>{{ medecin.user.last_name }}</td>
+                                  <td>{{ medecin.user.first_name }}</td>
+                                  <td>{{ medecin.specialite }}</td>
+                                  <td>{{ medecin.user.date_joined|date:"d M Y" }}</td>
+                                </tr>
+                              {% empty %}
+                                <tr><td colspan="5">Aucun médecin récemment ajouté.</td></tr>
+                              {% endfor %}
+                            </tbody>
+                          </table>
+
                         <div class="card-footer text-center">
-                          <a href="#">Voir tous les utilisateurs </a>
+                          <a href="{% url 'liste_medecins' %}">Voir tous les utilisateurs </a>
                         </div>
                       </div>
                     </div>
@@ -293,134 +271,37 @@
                     <!--end::Row-->
                   </div>
 
-                  <div class="row">
-                    <div class="col-md-12">
-                      <div class="card mb-4">
-                        <div class="card-header">
-                  <div class="card">
+                  <div class="card mt-3">
                     <div class="card-header">
-                      <h3 class="card-title"><strong>Ordre d'utilisation des Fonctionnalités</strong> </h3>
-                      <div class="card-tools">
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-collapse">
-                          <i data-lte-icon="expand" class="bi bi-plus-lg"></i>
-                          <i data-lte-icon="collapse" class="bi bi-dash-lg"></i>
-                        </button>
-                        <button type="button" class="btn btn-tool" data-lte-toggle="card-remove">
-                          <i class="bi bi-x-lg"></i>
-                        </button>
-                      </div>
+                      <h3 class="card-title">Fonctionnalités disponibles</h3>
+                      <p>Nombre de fonctionnalités : {{ fonctionnalites|length }}</p>
+
                     </div>
-                    <!-- /.card-header -->
                     <div class="card-body p-0">
                       <div class="table-responsive">
                         <table class="table m-0">
                           <thead>
                             <tr>
-                              <th>ID</th>
-                              <th>Fonctionnalités</th>
-                              <th>Status</th>
-                              <th>Utilisations</th>
+                              <th>Code</th>
+                              <th>Fonctionnalité</th>
+                              <th>Statut</th>
                             </tr>
                           </thead>
                           <tbody>
-                            <tr>
-                              <td>
-                                <a
-                                  href="pages/examples/invoice.html"
-                                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                                  >O00AC</a
-                                >
-                              </td>
-                              <td><strong>Discussion Médecin-Patient(Chat)</strong></td>
-                              <td><span class="btn btn-sm btn-primary"> Shipped </span></td>
-                              <td><div id="table-sparkline-1"></div></td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <a
-                                  href="pages/examples/invoice.html"
-                                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                                  >000AB</a
-                                >
-                              </td>
-                              <td><strong>Assistant Automatique(Chat Box)</strong></td>
-                              <td><span class="btn btn-sm btn-primary">Pending</span></td>
-                              <td><div id="table-sparkline-2"></div></td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <a
-                                  href="pages/examples/invoice.html"
-                                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                                  >000AD</a
-                                >
-                              </td>
-                              <td><strong>Ajout Patient</strong></td>
-                              <td><span class="btn btn-sm btn-primary"> Delivered </span></td>
-                              <td><div id="table-sparkline-3"></div></td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <a
-                                  href="pages/examples/invoice.html"
-                                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                                  >000AE</a
-                                >
-                              </td>
-                              <td><strong>Ordonnaces </strong></td>
-                              <td><span class="btn btn-sm btn-primary">Processing</span></td>
-                              <td><div id="table-sparkline-4"></div></td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <a
-                                  href="pages/examples/invoice.html"
-                                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                                  >000AF</a
-                                >
-                              </td>
-                              <td><strong>Consultation du Dossier Médical</strong></td>
-                              <td><span class="btn btn-sm btn-primary">Pending</span></td>
-                              <td><div id="table-sparkline-5"></div></td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <a
-                                  href="pages/examples/invoice.html"
-                                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                                  >000AG</a
-                                >
-                              </td>
-                              <td><strong>Utilisation des rappels</strong></td>
-                              <td><span class="btn btn-sm btn-primary"> Delivered </span></td>
-                              <td><div id="table-sparkline-6"></div></td>
-                            </tr>
-                            <tr>
-                              <td>
-                                <a
-                                  href="pages/examples/invoice.html"
-                                  class="link-primary link-offset-2 link-underline-opacity-25 link-underline-opacity-100-hover"
-                                  >000AH</a
-                                >
-                              </td>
-                              <td><strong>Inscription</strong></td>
-                              <td><span class="btn btn-sm btn-primary">Shipped</span></td>
-                              <td><div id="table-sparkline-7"></div></td>
-                            </tr>
+                            {% for f in fonctionnalites %}
+                              <tr>
+                                <td>{{ f.code }}</td>
+                                <td>{{ f.nom }}</td>
+                                <td><span class="badge bg-primary">{{ f.statut }}</span></td>
+                              </tr>
+                            {% empty %}
+                              <tr><td colspan="3">Aucune fonctionnalité disponible.</td></tr>
+                            {% endfor %}
                           </tbody>
                         </table>
                       </div>
-                      <!-- /.table-responsive -->
                     </div>
-                    <!-- /.card-body -->
-                    <div class="card-footer clearfix">
-                      <a href="javascript:void(0)" class="btn btn-sm btn-primary float-start">
-                        Ajouter de nouvelles fonctionnalités
-                      </a>
-                      <a href="javascript:void(0)" class="btn btn-sm btn-secondary float-end">
-                       Voir toutes les fonctionnalités
-                      </a>
-                    </div>
+                  </div>
                     <!-- /.card-footer -->
                   </div>
                   <!-- /.card -->
@@ -429,6 +310,8 @@
               
               </div>
               <!--end::Row-->
+
+          {% endif %}     
             </div>
             <!--end::Container-->
           </div>

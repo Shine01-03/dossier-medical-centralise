@@ -1,0 +1,83 @@
+{% extends 'admin/base.html' %}
+{% load static %}
+
+{% block body %}
+<div class="container mt-5" style="max-width: 1000px;">
+  <div class="card shadow-lg">
+  <div class="card-header text-white text-center" style="background-color: hsl(214, 64%, 35%)">
+      <h4>➕ Ajouter un nouveau patient</h4>
+    </div>
+    <div class="card-body">
+      <form method="post" class="row g-4">
+        {% csrf_token %}
+        
+        <div class="col-md-5">
+          <label class="form-label">Nom</label>
+          {{ form.nom }}
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">Prénom(s)</label>
+          {{ form.prenoms }}
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">Âge</label>
+          {{ form.age }}
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">Date de naissance</label>
+          {{ form.date_naissance }}
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">Profession</label>
+          {{ form.profession }}
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">Téléphone</label>
+          {{ form.telephone }}
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">Sexe</label>
+          {{ form.sexe }}
+        </div>
+
+        <div class="col-md-5">
+          <label class="form-label">Domicile</label>
+          {{ form.domicile }}
+        </div>
+
+        <hr class="my-4">
+
+        <div class="col-md-6">
+          <label class="form-label">Personne à prévenir</label>
+          {{ form.personne_a_prevenir }}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Téléphone de la personne à prévenir</label>
+          {{ form.tel_personne_prevenir }}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">Situation matrimoniale</label>
+          {{ form.situation_matrimoniale }}
+        </div>
+
+        <div class="col-md-6">
+          <label class="form-label">État du patient</label>
+          {{ form.etat_patient }}
+        </div>
+
+        <div class="text-center mt-4">
+          <button type="submit" class="card-header text-white text-center" style="background-color: hsl(214, 64%, 35%)">💾 Enregistrer le patient</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

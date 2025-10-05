@@ -1,0 +1,238 @@
+{% extends 'admin/base_site.html' %}
+{% load static %}
+
+
+{% block extrahead %}
+
+
+{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+  <div class="card shadow-sm">
+  <div class="card-header text-white text-center" style="background-color: hsl(214, 64%, 35%)">
+      <h4>🧾 Dossier de {{ patient.nom }} {{ patient.prenoms }}</h4>
+    </div>
+
+    <div class="card-body">
+    <h5 class="mb-3">👤 Informations personnelles</h5>
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>Nom et prénom :</strong> {{ patient.nom }} {{ patient.prenom }}</p>
+        <p><strong>Date de naissance :</strong> {{ patient.date_naissance|date:"d M Y" }} ({{ patient.age }} ans)</p>
+        <p><strong>Sexe :</strong> {{ patient.sexe }}</p>
+        <p><strong>Situation matrimoniale :</strong> {{ patient.situation_matrimoniale|default:"-" }}</p>
+        <p><strong>Profession :</strong> {{ patient.profession|default:"-" }}</p>
+      </div>
+      <div class="col-md-6">
+        <p><strong>Téléphone :</strong> {{ patient.telephone|default:"-" }}</p>
+        <p><strong>Email :</strong> {{ patient.email }}</p>
+        <p><strong>Adresse :</strong> {{ patient.adresse|default:"-" }}</p>
+        <p><strong>Personne à prévenir :</strong> {{ patient.personne_a_prevenir|default:"-" }}</p>
+        <p><strong>Téléphone (urgence) :</strong> {{ patient.tel_personne_prevenir|default:"-" }}</p>
+      </div>
+    </div>
+
+    <hr>
+
+    <h5 class="mb-3">🩸 Informations médicales</h5>
+    <div class="row">
+      <div class="col-md-6">
+        <p><strong>Groupe sanguin :</strong> {{ patient.groupe_sanguin|default:"Non renseigné" }}</p>
+        
+        <p><strong>État du patient :</strong></p>
+        <select name="etat_patient" class="form-select">
+            <option value="A" {% if patient.etat_patient == 'A' %}selected{% endif %}>Assuré(e)</option>
+            <option value="N" {% if patient.etat_patient == 'N' %}selected{% endif %}>Non assuré(e)</option>
+        </select>
+      </div>
+
+      <div class="col-md-6">
+        <p><strong>Date d’inscription :</strong> {{ patient.date_creation|date:"d M Y H:i" }}</p>
+        <p><strong>Dernière mise à jour :</strong> {{ patient.date_modification|date:"d M Y H:i" }}</p>
+      </div>
+    </div>
+  </div>
+
+<!-- Liste des antécédents -->
+<div class="card mt-4">
+  <div class="card-header text-white" style="background-color: hsl(214, 72%, 55%)">
+      <h5>⚕️ Antécédents médicaux</h5>
+  </div>
+  <div class="card-body">
+      {% if patient.antecedents.all %}
+      <ul class="list-group">
+          {% for antecedent in patient.antecedents.all %}
+          <li class="list-group-item d-flex justify-content-between align-items-start">
+              <div>
+                  <strong>{{ antecedent.get_type_antecedent_display }} :</strong>
+                  {{ antecedent.description }}
+                  {% if antecedent.important %}
+                  <span class="badge bg-danger ms-2">⚠️ Informations critiques à considérer</span>
+                  {% endif %}
+                  <div class="text-muted">
+                      <small>
+                          Ajouté le {{ antecedent.date|date:"d M Y" }}
+                          {% if antecedent.medecin %}
+                          par Dr. {{ antecedent.medecin.get_full_name }}
+                          {% endif %}
+                      </small>
+                  </div>
+              </div>
+
+              <!-- Boutons modifier / supprimer -->
+              <div class="d-flex gap-2">
+                  <a href="{% url 'modifier_antecedent' antecedent.id %}" class="btn btn-outline-primary btn-sm me-1">
+                      ✏️ Modifier
+                  </a>
+                  <!-- Bouton Supprimer ouvre modal -->
+                  <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ antecedent.id }}">
+                      🗑️ Supprimer
+                  </button>
+              </div>
+          </li>
+
+          <!-- Modal de confirmation suppression -->
+          <div class="modal fade" id="deleteModal{{ antecedent.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ antecedent.id }}" aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                  <h5 class="modal-title" id="deleteModalLabel{{ antecedent.id }}">Confirmer la suppression</h5>
+                  <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                  Êtes-vous sûr de vouloir supprimer cet antécédent ?
+                  <br>
+                  <strong>{{ antecedent.get_type_antecedent_display }} :</strong> {{ antecedent.description }}
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                  <form method="post" action="{% url 'supprimer_antecedent' antecedent.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Supprimer</button>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {% endfor %}
+      </ul>
+      {% else %}
+      <p>Aucun antécédent enregistré.</p>
+      {% endif %}
+  </div>
+</div>
+
+
+
+  <!-- Bouton Ajouter antécédent -->
+  <div class="mt-3 text-center">
+    <a href="{% url 'ajouter_antecedent' patient.id %}" class="btn text-white" style="background-color: hsl(214, 64%, 35%)">
+      ➕ Ajouter un antécédent
+    </a>
+  </div>
+
+  <!-- 💊 Liste des prescriptions -->
+  <div class="card mt-4">
+    <div class="card-header bg-success text-white">
+      <h5>🧾 Ordonnances</h5>
+    </div>
+    {% for prescription in patient.prescriptions.all %}
+      <div class="card mb-4 shadow">
+        <div class="card-header d-flex justify-content-between align-items-center">
+          <div>
+            <h5 class="mb-0">🗓️ Prescription du {{ prescription.date_prescription|date:"d/m/Y à H:i" }}</h5>
+            <small>Par Dr {{ prescription.medecin.first_name }} {{ prescription.medecin.last_name }}</small>
+          </div>
+          <div>
+            <!-- Actions -->
+            <button type="button" class="btn btn-outline-success btn-sm me-1" data-bs-toggle="modal" data-bs-target="#modalRenouvellement{{ prescription.id }}">
+              🔁 Renouveler
+            </button>
+
+            <a href="{% url 'modifier_prescription' prescription.id %}" class="btn btn-outline-warning btn-sm me-1">
+              ✏️ Modifier
+            </a>
+            
+            <button type="button" class="btn btn-outline-danger btn-sm" data-bs-toggle="modal" data-bs-target="#modalSuppression{{ prescription.id }}">
+              🗑️ Supprimer
+            </button>
+          </div>
+        </div>
+
+        <!-- Modal Renouvellement -->
+        <div class="modal fade" id="modalRenouvellement{{ prescription.id }}" tabindex="-1" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <form method="post" action="{% url 'renouveler_prescription' prescription.id %}">
+                {% csrf_token %}
+                <div class="modal-header bg-info text-white">
+                  <h5 class="modal-title">🔁 Renouveler la prescription</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Fermer"></button>
+                </div>
+                <div class="modal-body">
+                  Voulez-vous vraiment renouveler cette prescription ?
+                </div>
+                <div class="modal-footer">
+                  <button type="submit" class="btn btn-success">✅ Oui, renouveler</button>
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">❌ Annuler</button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+
+
+          <!-- Modale -->
+          <div class="modal fade" id="modalSuppression{{ prescription.id }}" tabindex="-1">
+            <div class="modal-dialog modal-dialog-centered">
+              <div class="modal-content">
+                <div class="modal-header bg-danger text-white">
+                  <h5 class="modal-title">Confirmer la suppression</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  ⚠️ Es-tu sûr de vouloir supprimer cette prescription ?
+                </div>
+                <div class="modal-footer">
+                  <form method="post" action="{% url 'supprimer_prescription' prescription.id %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Oui, supprimer</button>
+                  </form>
+                  <button class="btn btn-secondary" data-bs-dismiss="modal">Annuler</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          </span>
+        <div class="card-body">
+          <ul>
+            {% for medoc in prescription.medicaments.all %}
+              <li>
+                💊 <strong>{{ medoc.nom_medicament }}</strong> :
+                {{ medoc.posologie }} pendant {{ medoc.duree_traitement }} jours
+              </li>
+            {% endfor %}
+          </ul>
+          {% if prescription.remarques %}
+            <p class="text-muted mt-2">📝 {{ prescription.remarques }}</p>
+          {% endif %}
+        </div>
+      </div>
+    {% empty %}
+      <p>Aucune prescription enregistrée.</p>
+    {% endfor %}
+
+  </div>
+
+  <!-- Bouton Ajouter une prescription -->
+  <div class="mt-3 text-center">
+    <a href="{% url 'ajouter_prescription' patient.id %}"class="btn text-white" style="background-color: hsl(148, 71%, 25%)">
+      ➕ Ajouter une prescription
+    </a>
+  </div>
+  
+
+</div>
+{% endblock %}
